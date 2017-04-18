@@ -1,0 +1,39 @@
+              jQuery.ajax({
+                  //url: '../api/organisationUnits.json?fields=id,name,code&level=2',
+				  url: '../api/organisationUnitGroupSets/A2DKecGXz73.json?fields=organisationUnitGroups[id,name]',
+                  type: 'GET',
+                  async: false,
+                  beforeSend: function(xhr) {
+                      //alert('sendingvalue');
+                  },
+                  success: function(responses) {
+                      console.log("sizeis"+responses.organisationUnitGroups.length);
+                      for(var a=0; a<responses.organisationUnitGroups.length; a++){
+                      	console.log(responses.organisationUnitGroups[a].name);
+                      	provinces(responses.organisationUnitGroups[a].name,responses.organisationUnitGroups[a].id)
+                     
+                      }
+	
+                  }
+              });
+
+
+function provinces(provincename,provinceid){
+	jQuery.ajax({
+		url:'../api/organisationUnitGroups/'+provinceid+'?fields=organisationUnits[children[id,name]]',
+		type:'GET',
+		async:false,
+		beforeSend: function(xhr){
+
+		},
+		success:function(responses){
+			console.log("sizeis"+responses.organisationUnits.length);
+			var subcounties=0;
+			for(var a=0; a<responses.organisationUnits.length; a++){
+				subcounties=responses.organisationUnits[a].children.length+subcounties;
+			}
+			console.log("subcounties"+subcounties);
+		}
+
+	});
+}
